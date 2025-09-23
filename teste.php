@@ -20,7 +20,7 @@ class AvalicaoRisco
   public function regra_1($cargo_type, $total_distance_km, $total_cargo_value)
   {
     if($cargo_type == 'Produtos Químicos Perigosos'){
-      $this->tipo_risco = $this->risco[self::ALTO];
+      $this->tipo_risco = self::ALTO;
       $this->reasons[] = $cargo_type;
     }elseif($cargo_type == 'Alimentos Perecíveis' && $total_distance_km > 300){
       $this->tipo_risco++;
@@ -43,19 +43,21 @@ class AvalicaoRisco
 
   public function regra_3($traffic_accident_year_history)
   {
-    if($traffic_accident_year_history > 5){
-      $this->tipo_risco++;
-      $this->reasons[] = "Número de sinistros reportados pela tranpostadora nos ultimos 12 meses foi maior que 5 acidentes";
-    }elseif($traffic_accident_year_history > 10){
+    if($traffic_accident_year_history > 10){
       $this->tipo_risco += 2;
       $this->reasons[] = "Número de sinistros reportados pela tranpostadora nos ultimos 12 meses foi maior que 10 acidentes";
     }
+    elseif($traffic_accident_year_history > 5){
+      $this->tipo_risco++;
+      $this->reasons[] = "Número de sinistros reportados pela tranpostadora nos ultimos 12 meses foi maior que 5 acidentes";
+    }
+
   }
 
   public function regra_4($total_cargo_value, $has_insurance)
   {
     if($total_cargo_value > 200000 && !$has_insurance){
-      $this->tipo_risco = $this->risco[self::CRITICO];
+      $this->tipo_risco = self::CRITICO;
       $this->reasons = [
         "O valor total da carga é maior que {$total_cargo_value} BRL e a carga não possui seguro especifico para esta viagem"
       ];
